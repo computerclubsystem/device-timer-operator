@@ -1,0 +1,15 @@
+<form [formGroup]="form" (ngSubmit)="onLogIn()" class="example-form dto-flex-column dto-standard-width dto-auto-margin">
+  <mat-form-field class="example-full-width">
+    <mat-label>Username</mat-label>
+    <input [formControl]="form.controls.username" matInput autocomplete="username" />
+    <mat-error>Username is required</mat-error>
+  </mat-form-field>
+
+  <mat-form-field class="example-full-width">
+    <mat-label>Password</mat-label>
+    <input [formControl]="form.controls.password" matInput type="password" autocomplete="current-password" />
+    <mat-error>Password is required</mat-error>
+  </mat-form-field>
+
+  <button [disabled]="form.invalid" mat-flat-button color="primary" type="submit">Log in</button>
+</form>

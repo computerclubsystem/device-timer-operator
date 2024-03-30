@@ -1,0 +1,27 @@
+/* You can add global styles to this file, and also import other style files */
+:root {
+  --stack-gap: 1em;
+  --stack-gap-small: 0.5em;
+  --standard-width: 20em;
+}
+
+html, body { height: 100%; }
+body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+
+.dto-flex-column {
+  display: flex;
+  flex-direction: column;
+  gap: var(--stack-gap);
+}
+
+.dto-stack-gap-small {
+  gap: var(--stack-gap-small);
+}
+
+.dto-standard-width {
+  width: var(--standard-width);
+}
+
+.dto-auto-margin {
+  margin: auto;
+}
