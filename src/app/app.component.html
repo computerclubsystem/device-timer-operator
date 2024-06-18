@@ -1,22 +1,43 @@
-<div class="example-container" [class.example-is-mobile]="mobileQuery.matches">
-  <mat-toolbar color="primary" class="example-toolbar">
-    <button mat-icon-button (click)="snav.toggle()"><mat-icon>menu</mat-icon></button>
-    <h1 class="example-app-name">Device timer operator</h1>
-  </mat-toolbar>
+<mat-toolbar *transloco="let t" color="primary" class="dto-main-toolbar dto-flex-row dto-flex-space-between">
+  <section class="dto-main-toolbar-left-section dto-flex-row">
+    <button mat-icon-button [matMenuTriggerFor]="mainMenu">
+      <mat-icon>menu</mat-icon>
+    </button>
+  </section>
+  <section class="dto-main-toolbar-middle-section dto-flex-row">
+  </section>
+  <section class="dto-main-toolbar-right-section dto-flex-row">
+    @if(signals.isLoggedIn()) {
+    <button mat-icon-button [matMenuTriggerFor]="accountMenu">
+      <mat-icon>account_circle</mat-icon>
+    </button>
+    } @else {
+    <button mat-button routerLink="login">
+      <mat-icon>login</mat-icon>
+      <span>{{t('LOGIN')}}</span>
+    </button>
+    }
+    <mat-menu #accountMenu="matMenu">
+      <button mat-menu-item>
+        <mat-icon>logout</mat-icon>
+        <span>{{t('LOGOUT')}}</span>
+      </button>
+    </mat-menu>
+  </section>
+  <mat-menu #mainMenu="matMenu">
+    @if(!signals.isLoggedIn()) {
+    <button mat-menu-item>
+      <mat-icon>sports_esports</mat-icon>
+      <span>{{t('DEVICES')}}</span>
+    </button>
+    <button mat-menu-item>
+      <mat-icon>settings</mat-icon>
+      <span>{{t('SETTINGS')}}</span>
+    </button>
+    }
+  </mat-menu>
+</mat-toolbar>
 
-  <mat-sidenav-container class="example-sidenav-container" [style.marginTop.px]="mobileQuery.matches ? 56 : 0">
-    <mat-sidenav #snav [mode]="mobileQuery.matches ? 'over' : 'side'" [fixedInViewport]="mobileQuery.matches"
-      fixedTopGap="56">
-      <mat-nav-list>
-        @for (nav of navItems; track nav) {
-        <a mat-list-item [routerLink]="nav.link">{{nav.text}}</a>
-        }
-      </mat-nav-list>
-    </mat-sidenav>
-
-    <mat-sidenav-content>
-      <router-outlet />
-    </mat-sidenav-content>
-
-  </mat-sidenav-container>
+<div class="dto-page-content">
+  <router-outlet />
 </div>

@@ -1,22 +1,22 @@
 import { Injectable } from '@angular/core';
 
-import { ServerConnectorConfig } from './server-connector-config';
+import { ServerConnectorServiceConfig } from './server-connector-config';
 
 @Injectable({
   providedIn: 'root'
 })
-export class ServerConnector {
-  private state: ServerConnectorState = {} as ServerConnectorState;
+export class ServerConnectorService {
+  private state: ServerConnectorServiceState = {} as ServerConnectorServiceState;
   private connectedCallback?: () => void;
   private disconnectedCallback?: () => void;
   private dataReceivedCallback?: (data: string) => void;
   private errorCallback?: (error: any) => void;
   private scheduleConnectTimeoutHandle?: number;
 
-  init(config: ServerConnectorConfig): void {
+  init(config: ServerConnectorServiceConfig): void {
     this.state = {
       config,
-    } as ServerConnectorState;
+    } as ServerConnectorServiceState;
   }
 
   setConnectedCallback(callback: () => void): void {
@@ -40,7 +40,7 @@ export class ServerConnector {
       this.closeSocket();
       this.state.ws = new WebSocket(this.state.config.url);
     } catch (e) {
-      this.sheduleConnect();
+      this.scheduleConnect();
       this.errorCallback?.(e);
       return;
     }
@@ -48,16 +48,15 @@ export class ServerConnector {
       this.connectedCallback?.();
     };
     this.state.ws.onclose = () => {
-      this.sheduleConnect();
+      this.scheduleConnect();
       this.disconnectedCallback?.();
     };
     this.state.ws.onerror = ev => {
-      this.sheduleConnect();
+      this.scheduleConnect();
       this.errorCallback?.(ev);
     };
     this.state.ws.onmessage = ev => {
       this.dataReceivedCallback?.(ev.data);
-      console.log(ev);
     };
   }
 
@@ -76,7 +75,7 @@ export class ServerConnector {
     } catch { }
   }
 
-  private sheduleConnect(): void {
+  private scheduleConnect(): void {
     if (this.scheduleConnectTimeoutHandle !== undefined) {
       window.clearTimeout(this.scheduleConnectTimeoutHandle);
     }
@@ -84,8 +83,8 @@ export class ServerConnector {
   }
 }
 
-interface ServerConnectorState {
-  config: ServerConnectorConfig;
+interface ServerConnectorServiceState {
+  config: ServerConnectorServiceConfig;
   ws: WebSocket;
 }
 

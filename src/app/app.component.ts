@@ -1,88 +1,83 @@
-import { ChangeDetectorRef, Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, OnInit } from '@angular/core';
+import { NgIf } from '@angular/common';
 import { RouterLink, RouterModule, RouterOutlet } from '@angular/router';
 import { MatButtonModule } from '@angular/material/button';
-import { MatSidenavModule } from '@angular/material/sidenav';
 import { MatToolbarModule } from '@angular/material/toolbar';
 import { MatListModule } from '@angular/material/list';
 import { MatIconModule } from '@angular/material/icon';
-import { MediaMatcher } from '@angular/cdk/layout';
+import { MatMenuModule } from '@angular/material/menu';
+import { MatSnackBarModule } from '@angular/material/snack-bar';
+import { TranslocoDirective } from '@jsverse/transloco';
 
-import { LoginComponent } from './login/login.component';
-import { ServerConnector } from './server-connector/server-connector';
-import { ServerConnectorConfig } from './server-connector/server-connector-config';
 import { SubjectsService } from './subjects/subjects.service';
 import { Message } from './messages/message';
+import { AppComponentSignals } from './declarations';
+import { AppService } from './app.service';
+import { ServerConnectorService } from './server-connector/server-connector.service';
+import { ServerConnectorServiceConfig } from './server-connector/server-connector-config';
+import { NotificationsService } from './shared/notifications/notifications.service';
+import { TranslationsService } from './shared/translations/translations.service';
+import { TranslationKey } from './shared/translations/declarations';
 
 @Component({
   selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrl: './app.component.css',
   standalone: true,
   imports: [
-    RouterOutlet, MatButtonModule, MatSidenavModule, MatToolbarModule,
-    MatListModule, MatIconModule, RouterLink, RouterModule, // LoginComponent
+    NgIf,
+    RouterOutlet, MatButtonModule, MatMenuModule, MatToolbarModule, MatSnackBarModule,
+    MatListModule, MatIconModule, RouterLink, RouterModule, TranslocoDirective,
   ],
-  templateUrl: './app.component.html',
-  styleUrl: './app.component.css'
 })
-export class AppComponent implements OnInit, OnDestroy {
-  mobileQuery: MediaQueryList;
-  navItems?: NavigationItem[];
-
-  private _mobileQueryListener: () => void;
+export class AppComponent implements OnInit {
+  signals: AppComponentSignals = this.appSvc.createSignals();
 
   constructor(
-    private readonly changeDetectorRef: ChangeDetectorRef,
-    private readonly media: MediaMatcher,
-    private readonly serverConnector: ServerConnector,
-    private readonly subjectsService: SubjectsService,
+    private readonly serverConnectorSvc: ServerConnectorService,
+    private readonly subjectsSvc: SubjectsService,
+    private readonly appSvc: AppService,
+    private readonly notificationsSvc: NotificationsService,
+    private readonly translationsSvc: TranslationsService,
   ) {
-    this.mobileQuery = media.matchMedia('(max-width: 600px)');
-    this._mobileQueryListener = () => changeDetectorRef.detectChanges();
-    this.mobileQuery.addListener(this._mobileQueryListener);
   }
 
   ngOnInit(): void {
-    this.navItems = [
-      { text: 'Log in', link: 'login' },
-      { text: 'Log out', link: 'logout' },
-      { text: 'Groups', link: 'device-groups' },
-    ];
-    this.subjectsService.getSendMessageObservable().subscribe(msg => this.onSendMessage(msg));
+    this.subjectsSvc.getSendMessageObservable().subscribe(msg => this.onSendMessage(msg));
 
-    const serverConnectorConfig: ServerConnectorConfig = {
+    const serverConnectorConfig: ServerConnectorServiceConfig = {
       reconnectDelay: 1000,
-      url: 'wss://localhost:65446',
+      url: this.appSvc.getServerWebSocketUrl(),
     };
-    this.serverConnector.setConnectedCallback(() => this.onConnectedToServer());
-    this.serverConnector.setDataReceivedCallback(data => this.onServerDataReceived(data));
-    this.serverConnector.setDisconnectedCallback(() => this.onServerDisconnected());
-    this.serverConnector.setErrorCallback(error => this.onServerError(error));
-    this.serverConnector.init(serverConnectorConfig);
-    this.serverConnector.connect();
+    this.serverConnectorSvc.setConnectedCallback(() => this.onConnectedToServer());
+    this.serverConnectorSvc.setDataReceivedCallback(data => this.onServerDataReceived(data));
+    this.serverConnectorSvc.setDisconnectedCallback(() => this.onServerDisconnected());
+    this.serverConnectorSvc.setErrorCallback(error => this.onServerError(error));
+    this.serverConnectorSvc.init(serverConnectorConfig);
+    this.serverConnectorSvc.connect();
   }
 
   private onSendMessage(msg: Message): void {
     console.log('Sending message', msg);
-    this.serverConnector.sendObject(msg);
+    this.serverConnectorSvc.sendObject(msg);
   }
 
   private onConnectedToServer(): void {
-    console.log('Server connected');
+    this.notificationsSvc.showSuccess(this.translationsSvc.translate(TranslationKey.CONNECTED_TO_SERVER));
   }
 
   private onServerDataReceived(data: string): void {
     console.warn('Server data received', data);
+    const msg = JSON.parse(data) as Message;
+    this.subjectsSvc.getMessageReceivedSubject().next(msg);
   }
 
   private onServerDisconnected(): void {
-    console.warn('Server disconnected');
+    this.notificationsSvc.showWarn(this.translationsSvc.translate(TranslationKey.DISCONNECTED_FROM_SERVER));
   }
 
   private onServerError(error: any): void {
-    console.warn('Server error', error);
-  }
-
-  ngOnDestroy(): void {
-    this.mobileQuery.removeListener(this._mobileQueryListener);
+    this.notificationsSvc.showError(this.translationsSvc.translate(TranslationKey.SERVER_CONNECTION_ERROR));
   }
 }
 

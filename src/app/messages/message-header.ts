@@ -1,7 +1,7 @@
-import { MessageType } from './message-type';
+import { OperatorMessageType } from './message-type';
 
 export interface MessageHeader {
-  type: MessageType;
+  type: OperatorMessageType;
   corellationId?: string;
   roundTripData?: Record<string, string>;
 }

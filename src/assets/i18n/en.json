@@ -1,0 +1,13 @@
+{
+  "LOGIN": "Log in",
+  "LOGOUT": "Log out",
+  "USERNAME": "Username",
+  "USERNAME_IS_REQUIRED": "Username is required",
+  "PASSWORD": "Password",
+  "PASSWORD_IS_REQUIRED": "Password is required",
+  "DEVICES": "Devices",
+  "SETTINGS": "Settings",
+  "CONNECTED_TO_SERVER": "Connected to server",
+  "DISCONNECTED_FROM_SERVER": "Disconnected from server",
+  "SERVER_CONNECTION_ERROR": "Server connection error"
+}

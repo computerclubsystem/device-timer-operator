@@ -1,15 +1,15 @@
 import { Message } from './message';
 import { MessageHeader } from './message-header';
-import { MessageType } from './message-type';
+import { OperatorMessageType } from './message-type';
 
 // Request
 export interface AuthMessageRequestHeader extends MessageHeader {
-  type: MessageType.authRequest;
+  type: OperatorMessageType.authRequest;
 }
 
 export interface AuthMessageRequestBody {
   username: string,
-  password: string,
+  passwordHash: string,
 }
 
 export interface AuthMessageRequest extends Message {
@@ -19,7 +19,7 @@ export interface AuthMessageRequest extends Message {
 
 // Reply
 export interface AuthMessageReplyHeader extends MessageHeader {
-  type: MessageType.authReply;
+  type: OperatorMessageType.authReply;
 }
 
 export interface AuthMessageReplyBody {

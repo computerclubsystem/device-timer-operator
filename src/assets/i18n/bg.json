@@ -1,0 +1,13 @@
+{
+  "LOGIN": "Вход",
+  "LOGOUT": "Изход",
+  "USERNAME": "Юзър",
+  "USERNAME_IS_REQUIRED": "Юзъра е задължителен",
+  "PASSWORD": "Парола",
+  "PASSWORD_IS_REQUIRED": "Паролата е задължителна",
+  "DEVICES": "Устройства",
+  "SETTINGS": "Настройки",
+  "CONNECTED_TO_SERVER": "Свързан със сървъра",
+  "DISCONNECTED_FROM_SERVER": "Връзката със сървъра е прекъсната",
+  "SERVER_CONNECTION_ERROR": "Грешка при връзката със сървъра"
+}

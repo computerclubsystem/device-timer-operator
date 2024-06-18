@@ -1,27 +1,75 @@
-/* You can add global styles to this file, and also import other style files */
 :root {
-  --stack-gap: 1em;
-  --stack-gap-small: 0.5em;
-  --standard-width: 20em;
+  --ccs3-dto-stack-gap: 1em;
+  --ccs3-dto-stack-gap-small: 0.5em;
+  --ccs3-dto-standard-width: 20em;
+  --ccs3-dto-color-success-background: #008a22;
+  --ccs3-dto-color-success-foreground: #ffffff;
+  --ccs3-dto-color-warn-background: #c25700;
+  --ccs3-dto-color-warn-foreground: #ffffff;
+  --ccs3-dto-color-error-background: #eb0050;
+  --ccs3-dto-color-error-foreground: #ffffff;
 }
 
-html, body { height: 100%; }
-body { margin: 0; font-family: Roboto, "Helvetica Neue", sans-serif; }
+html,
+body {
+  height: 100%;
+}
+
+body {
+  margin: 0;
+  font-family: Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Flex box */
+
+.dto-flex-row {
+  display: flex;
+  flex-direction: row;
+  gap: var(--ccs3-dto-stack-gap);
+}
 
 .dto-flex-column {
   display: flex;
   flex-direction: column;
-  gap: var(--stack-gap);
+  gap: var(--ccs3-dto-stack-gap);
 }
 
 .dto-stack-gap-small {
-  gap: var(--stack-gap-small);
+  gap: var(--ccs3-dto-stack-gap-small);
 }
 
-.dto-standard-width {
-  width: var(--standard-width);
+.dto-flex-space-between {
+  justify-content: space-between;
 }
+
+
+/* Size */
+
+.dto-standard-width {
+  width: var(--ccs3-dto-standard-width);
+}
+
+
+/* Margin */
 
 .dto-auto-margin {
   margin: auto;
+}
+
+
+/* Notifications */
+
+.mat-mdc-snack-bar-container.ccs3-dto-success-notification .mat-mdc-snackbar-surface {
+  background-color: var(--ccs3-dto-color-success-background);
+  color: var(--ccs3-dto-color-success-foreground);
+}
+
+.mat-mdc-snack-bar-container.ccs3-dto-warn-notification .mat-mdc-snackbar-surface {
+  background-color: var(--ccs3-dto-color-warn-background);
+  color: var(--ccs3-dto-color-warn-foreground);
+}
+
+.mat-mdc-snack-bar-container.ccs3-dto-error-notification .mat-mdc-snackbar-surface {
+  background-color: var(--ccs3-dto-color-error-background);
+  color: var(--ccs3-dto-color-error-foreground);
 }

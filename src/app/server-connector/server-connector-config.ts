@@ -1,4 +1,4 @@
-export interface ServerConnectorConfig {
+export interface ServerConnectorServiceConfig {
   url: string;
   reconnectDelay: number;
 }
